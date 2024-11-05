@@ -3,34 +3,8 @@ const socketIo = require('socket.io');
 
 exports.setup = async (server) => {
   const io = socketIo(server);
-  let waitingPlayer = null;
 
   io.on('connection', (socket) => {
-    socket.on('joinGame', async (userId) => {
-      if (waitingPlayer) {
-        const roomId = `game-${waitingPlayer.id}-${socket.id}`;
-        socket.join(roomId);
-        waitingPlayer.join(roomId);
-
-        const questions = await model('question').findMany({});
-
-        // Create a new game in MongoDB
-        await model('game').create({
-          players: [waitingPlayer.userId, userId],
-          // eslint-disable-next-line no-underscore-dangle
-          questions: questions.map((q) => q._id),
-          scores: { [waitingPlayer.userId]: 0, [userId]: 0 }
-        });
-
-        io.in(roomId).emit('gameStart', { roomId, questions });
-        waitingPlayer = null;
-      } else {
-        waitingPlayer = socket;
-        // eslint-disable-next-line no-param-reassign
-        socket.userId = userId;
-      }
-    });
-
     socket.on('startQuestionSequence', async ({ roomId, gameId }) => {
       const game = await model('game').findById(gameId).populate('questions');
 
@@ -49,7 +23,7 @@ exports.setup = async (server) => {
       const game = await model('game').findById(gameId).populate('questions');
       const question = game.questions[questionIndex];
 
-      if (answer === question.correctAnswer) {
+      if (answer === question.answer) {
         game.scores.set(userId, (game.scores.get(userId) || 0) + 1);
         await game.save();
       }
