@@ -1,5 +1,4 @@
 /* eslint-disable global-require */
-/* eslint-disable import/no-unresolved */
 /* eslint-disable import/no-dynamic-require */
 const { readdirSync } = require('fs');
 const { dirname } = require('path');
