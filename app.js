@@ -10,6 +10,7 @@ require('dotenv').config();
 
 const redisClient = require('./src/config/redisConfig');
 const { response } = require('./src/helpers/utils');
+const { setup } = require('./src/helpers/socket');
 
 const app = express();
 
@@ -114,5 +115,8 @@ app.use('/', (req, res) => res.status(NOT_FOUND).json(response('Route not found!
 
 /** Listening to port */
 app.listen(app.get('port'), () => console.info(`Find the server at port:${app.get('port')}`));
+
+/** Setup socket */
+setup(require('http').createServer(app));
 
 module.exports = app;
