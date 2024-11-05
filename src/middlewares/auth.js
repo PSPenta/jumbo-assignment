@@ -10,12 +10,14 @@ const { response } = require(`${require.main.path}/src/helpers/utils`);
 exports.jwtAuth = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
+      console.error('Invalid authorization!');
       return res.status(StatusCodes.UNAUTHORIZED).json(response('You are not authorized to access this page!'));
     }
 
     const token = req.headers.authorization.split(' ')[1];
-    const blacklistedToken = await model('Blacklist').findOne({ token });
+    const blacklistedToken = await model('blacklist').findOne({ token });
     if (blacklistedToken) {
+      console.error('Token blacklisted!');
       return res.status(StatusCodes.UNAUTHORIZED).json(response('You are not authorized to access this page!'));
     }
 
@@ -26,11 +28,11 @@ exports.jwtAuth = async (req, res, next) => {
         return res.status(StatusCodes.UNAUTHORIZED).json(response('Your login session is either expired or the token is invalid, please try logging in again!'));
       }
 
-      if (decoded && decoded.userId && decoded.role) {
+      if (decoded && decoded.userId && decoded.username) {
         req.userId = decoded.userId;
-        req.userType = decoded.role;
         next();
       } else {
+        console.error('Token is invalid!');
         return res.status(StatusCodes.UNAUTHORIZED).json(response('You are not authorized to access this page!'));
       }
     });

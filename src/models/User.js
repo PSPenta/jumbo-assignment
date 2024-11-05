@@ -12,27 +12,7 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    role: {
-      type: String,
-      required: true,
-      default: 'buyer'
-    },
-    catalog: {
-      type: Schema.Types.ObjectId,
-      ref: 'catalog'
-    },
-    orders: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'order'
-      }
-    ],
-    blacklistedTokens: [
-      {
-        type: String,
-        required: true
-      }
-    ]
+    score: Number
   },
   {
     timestamps: true
