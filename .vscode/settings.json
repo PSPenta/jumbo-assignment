@@ -1,0 +1,15 @@
+{
+  "eslint.alwaysShowStatus": true,
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  // "editor.formatOnSave": true,
+  "eslint.validate": ["javascript"],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ]
+}

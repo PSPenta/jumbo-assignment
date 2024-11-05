@@ -1,0 +1,30 @@
+{
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": "airbnb",
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "comma-dangle": ["error", "never"],
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "no-console": [
+      "error",
+      {
+        "allow": ["error", "info", "warn"]
+      }
+    ],
+    "no-multi-spaces": ["error"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  }
+}

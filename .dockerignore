@@ -1,0 +1,10 @@
+# Ignore everything
+**
+
+# Allow files and directories
+!/src/**
+!/tests/**
+!/.env
+!/app.js
+!/package.json
+!/package-lock.json
