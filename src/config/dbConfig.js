@@ -7,8 +7,7 @@ const { dirname } = require('path');
 /** User define DB Credentials */
 const {
   db: {
-    noSqlDbConfig,
-    sqlDbConfig
+    noSqlDbConfig
   }
 } = require('./serverConfig');
 
@@ -55,69 +54,6 @@ if (database.toLowerCase() === 'mongodb') {
 
   // Exported the database connection which is to be imported at the server
   exports.default = Mongoose;
-} else if (database.toLowerCase() === 'sql') {
-  // Bring in the sequelize module
-  const Sequelize = require('sequelize');
-
-  const {
-    name, username, password, host, port, dialect
-  } = sqlDbConfig;
-
-  const sequelize = new Sequelize(name, username, password, {
-    host,
-    port,
-    dialect,
-    logging: false,
-    // Logging false to keep the console clean (change it to true to print all queries in console).
-    pool: {
-      max: 5,
-      min: 1,
-      acquire: 30000,
-      idle: 10000
-    },
-    define: {
-      timestamps: true,
-      underscored: true
-    }
-  });
-
-  sequelize
-    .authenticate()
-    .then(() => console.info(
-      `Sequelize connection started on database "${name}" from "${dialect}"`
-    ))
-    .catch((err) => console.error('\x1B[31m', `=> Sequelize connection error: ${err}`));
-
-  process.on('SIGINT', () => {
-    console.warn(
-      '\x1b[33m%s\x1b[0m',
-      '-> Sequelize disconnected through app termination!'
-    );
-    process.exit(0);
-  });
-
-  /**
-   * Pass name of the model defined in Sequelize Schema and get it imported
-   *
-   * @param {String} model Name of the model
-   *
-   * @return {Any} data which is given if it exists or False
-   */
-  exports.model = (model) => {
-    const models = require(`${require.main.path}/src/models`)(
-      sequelize,
-      Sequelize
-    );
-    return models[model];
-  };
-
-  sequelize
-    .sync()
-    .then(() => console.info('Sequelize connection synced and relationships established.'))
-    .catch((err) => console.error('\x1B[31m', err));
-
-  // Exported the database connection which is to be imported at the server
-  exports.default = sequelize;
 } else {
   console.warn(
     '\x1b[33m%s\x1b[0m',
