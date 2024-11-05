@@ -76,7 +76,7 @@ config.swaggerDefinition = {
 };
 
 config.swaggerOptions = {
-  customSiteTitle: '[Project Title]',
+  customSiteTitle: process.env.APP_TITLE,
   customCss: '',
   customFavIcon: ''
 };

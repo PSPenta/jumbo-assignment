@@ -8,6 +8,7 @@
     "lint-staged": "lint-staged",
     "pretest": "npm run lint",
     "start": "nodemon app",
+    "dev": "nodemon app",
     "test": "mocha 'tests/**/*.js' --timeout 10000 --exit",
     "update:packages": "npm install --save-dev npm-check-updates && ncu -u && npm update && npm uninstall npm-check-updates && npm i"
   },
