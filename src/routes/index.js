@@ -159,4 +159,28 @@ router.post(
   dependencies.controllers.authClient.register
 );
 
+/**
+ * @swagger
+ * /start-game:
+ *  post:
+ *    tags:
+ *      - Game
+ *    name: Start Game API
+ *    summary: This API let's users start a new game or join a game which is already started.
+ *    consumes:
+ *      - application/json
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: JWT token will be in response.
+ *      500:
+ *        description: Internal server error.
+ */
+router.post(
+  '/start-game',
+  dependencies.middlewares.auth.jwtAuth,
+  dependencies.controllers.game.startGame
+);
+
 module.exports = router;

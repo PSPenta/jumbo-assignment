@@ -87,4 +87,6 @@ exports.setup = async (server) => {
       io.socketsLeave(roomId);
     });
   });
+
+  return io;
 };

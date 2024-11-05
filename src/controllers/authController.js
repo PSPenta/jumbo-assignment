@@ -5,7 +5,7 @@ const { sign } = require('jsonwebtoken');
 const { model } = require('mongoose');
 
 const { jwt } = require(`${require.main.path}/src/config/serverConfig`);
-const { checkIfDataExists, response } = require(`${require.main.path}/src//helpers/utils`);
+const { checkIfDataExists, response } = require(`${require.main.path}/src/helpers/utils`);
 
 exports.jwtLogin = async (req, res) => {
   try {

@@ -117,6 +117,6 @@ app.use('/', (req, res) => res.status(NOT_FOUND).json(response('Route not found!
 app.listen(app.get('port'), () => console.info(`Find the server at port:${app.get('port')}`));
 
 /** Setup socket */
-setup(require('http').createServer(app));
+setup(require('http').createServer(app)).then((io) => { process.socketIO = io; }).catch((err) => console.error(err));
 
 module.exports = app;
