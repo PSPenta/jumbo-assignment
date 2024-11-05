@@ -35,20 +35,16 @@ if (database.toLowerCase() === 'mongodb') {
     readdirSync(`${dirname(require.main.filename)}/src/models`).forEach(
       (file) => require(`${dirname(require.main.filename)}/src/models/${file}`)
     );
+    console.info('Mongoose models loaded successfully!');
   });
 
   Mongoose.on('error', (err) => console.error('\x1B[31m', `=> Mongoose connection error: ${err}`));
 
   Mongoose.on('disconnected', () => console.warn('\x1b[33m%s\x1b[0m', '-> Mongoose disconnected!'));
 
-  process.on('SIGINT', () => {
-    Mongoose.close(() => {
-      console.warn(
-        '\x1b[33m%s\x1b[0m',
-        '-> Mongoose disconnected through app termination!'
-      );
-      process.exit(0);
-    });
+  process.on('SIGINT', async () => {
+    await Mongoose.close();
+    process.exit(0);
   });
 
   // Exported the database connection which is to be imported at the server
