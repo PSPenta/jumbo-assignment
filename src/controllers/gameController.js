@@ -10,8 +10,7 @@ const { jwt } = require(`${require.main.path}/src/config/serverConfig`);
 
 exports.startGame = async (req, res) => {
   try {
-    const token = req.header('Authorization').replace('Bearer ', '');
-    const userId = await this.jwtVerify(token);
+    const { userId } = req;
     const io = process.socketIO;
 
     // Ensure player is logged in
@@ -27,7 +26,7 @@ exports.startGame = async (req, res) => {
       const opponent = global.waitingPlayer;
       global.waitingPlayer = null;
 
-      // Fetch 6 random questions for the game
+      // Fetch 4 random questions for the game
       const questions = await model('question').find({});
 
       // Create a new game document in MongoDB
