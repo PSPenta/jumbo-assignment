@@ -20,6 +20,10 @@ exports.startGame = async (req, res) => {
 
     // Check if there's a waiting player
     if (global.waitingPlayer) {
+      if (global.waitingPlayer.userId.toString() === player._id.toString()) {
+        return res.status(StatusCodes.OK).send({ message: 'Please wait until another player starts the game!' });
+      }
+
       const opponent = global.waitingPlayer;
       global.waitingPlayer = null;
 
@@ -28,9 +32,9 @@ exports.startGame = async (req, res) => {
 
       // Create a new game document in MongoDB
       const game = await model('game').create({
-        players: [player._id, opponent._id],
+        players: [player._id, opponent.userId],
         questions: questions.map((q) => q._id),
-        scores: { [player._id]: 0, [opponent._id]: 0 },
+        scores: { [player._id]: 0, [opponent.userId]: 0 },
         status: 'ongoing'
       });
 
@@ -43,7 +47,7 @@ exports.startGame = async (req, res) => {
     }
     // No waiting players, set this player as the waiting player
     global.waitingPlayer = { userId: player._id, socketId: io.id };
-    return res.status(StatusCodes.OK).send({ message: 'Waiting for another player' });
+    return res.status(StatusCodes.OK).send({ message: 'Waiting for another player..' });
   } catch (error) {
     console.error(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(response('Something went wrong!'));
