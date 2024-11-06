@@ -5,19 +5,19 @@ exports.setup = async (server) => {
   const io = socketIo(server);
 
   io.on('connection', (socket) => {
-    socket.on('startQuestionSequence', async ({ roomId, gameId }) => {
+    socket.on('start:game', async ({ roomId, gameId }) => {
       const game = await model('game').findById(gameId).populate('questions');
 
       // Iterate through each question, emitting one question at a time
       game.questions.forEach((question, index) => {
         setTimeout(() => {
-          io.in(roomId).emit('newQuestion', { question, index });
+          io.in(roomId).emit('question:send', { question, index });
         }, index * 10000); // 10 seconds per question
       });
     });
 
     // Handling answers from players
-    socket.on('submitAnswer', async ({
+    socket.on('answer:submit', async ({
       roomId, gameId, questionIndex, answer, userId
     }) => {
       const game = await model('game').findById(gameId).populate('questions');
@@ -30,11 +30,11 @@ exports.setup = async (server) => {
 
       // Check if both players have answered
       if (Object.keys(game.scores).length === 2) {
-        io.in(roomId).emit('updateScores', Array.from(game.scores.entries()));
+        io.in(roomId).emit('update:score', Array.from(game.scores.entries()));
       }
     });
 
-    socket.on('endGame', async ({ roomId, gameId }) => {
+    socket.on('game:end', async ({ roomId, gameId }) => {
       const game = await model('game').findById(gameId);
       game.status = 'completed';
       await game.save();
@@ -55,7 +55,7 @@ exports.setup = async (server) => {
         result = { winner: 'draw' };
       }
 
-      io.in(roomId).emit('gameResult', result);
+      io.in(roomId).emit('final:result', result);
 
       // Clean up
       io.socketsLeave(roomId);

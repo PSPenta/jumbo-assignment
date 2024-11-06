@@ -40,8 +40,8 @@ exports.startGame = async (req, res) => {
 
       // Create a unique room ID
       const roomId = `game-${game._id}`;
-      io.to(opponent.socketId).emit('gameMatched', { roomId, gameId: game._id });
-      io.to(player.socketId).emit('gameMatched', { roomId, gameId: game._id });
+      io.to(opponent.socketId).emit('game:matched', { roomId, gameId: game._id });
+      io.to(player.socketId).emit('game:matched', { roomId, gameId: game._id });
 
       return res.status(StatusCodes.OK).send({ message: 'Game started', roomId, gameId: game._id });
     }
